@@ -1,0 +1,280 @@
+{
+  "last_updated": "September 2025",
+  "data_source_notes": "This data is aggregated from various public sources and should be verified with the station operator. Connector types, charging speeds, and precise coordinates may be generalized or estimated. Some charging locations operate within private or specialized fleets.",
+  "ev_charging_locations": [
+    {
+      "operator": "EVChaja",
+      "name": "Waterfront Mall",
+      "location": "Karen, Nairobi",
+      "coordinates": {
+        "latitude": "-1.348633",
+        "longitude": "36.721245"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 2",
+          "charging_speed_kw": "up to 22 kW",
+          "availability": "Public"
+        }
+      ]
+    },
+    {
+      "operator": "EVChaja",
+      "name": "Two Rivers Mall",
+      "location": "Limuru Road, Nairobi",
+      "coordinates": {
+        "latitude": "-1.217300",
+        "longitude": "36.797200"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 2",
+          "charging_speed_kw": "up to 22 kW",
+          "availability": "Public"
+        }
+      ]
+    },
+    {
+      "operator": "EVChaja",
+      "name": "Westside Mall",
+      "location": "Nakuru",
+      "coordinates": {
+        "latitude": "-0.285888",
+        "longitude": "36.064500"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 2",
+          "charging_speed_kw": "up to 22 kW",
+          "availability": "Public"
+        }
+      ]
+    },
+    {
+      "operator": "EVChaja",
+      "name": "City Mall",
+      "location": "Nyali, Mombasa",
+      "coordinates": {
+        "latitude": "-4.053800",
+        "longitude": "39.673800"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 2",
+          "charging_speed_kw": "up to 22 kW",
+          "availability": "Public"
+        }
+      ]
+    },
+    {
+      "operator": "Charge Net (Mayleen Corporation)",
+      "name": "ABC Mall",
+      "location": "Westlands, Nairobi",
+      "coordinates": {
+        "latitude": "-1.272186",
+        "longitude": "36.790938"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 1, Type 2",
+          "charging_speed_kw": "6.6 kW",
+          "availability": "Public"
+        },
+        {
+          "type": "DC",
+          "connector_type": "CCS, CHAdeMO (estimated)",
+          "charging_speed_kw": "30 kW",
+          "availability": "Public"
+        }
+      ]
+    },
+    {
+      "operator": "Charge Net (Mayleen Corporation)",
+      "name": "Be Energy Station",
+      "location": "Ngong Racecourse, Nairobi",
+      "coordinates": {
+        "latitude": "-1.298914",
+        "longitude": "36.786520"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 1, Type 2",
+          "charging_speed_kw": "6.6 kW",
+          "availability": "Public"
+        },
+        {
+          "type": "DC",
+          "connector_type": "CCS, CHAdeMO (estimated)",
+          "charging_speed_kw": "30 kW",
+          "availability": "Public"
+        }
+      ]
+    },
+    {
+      "operator": "Charge Net (Mayleen Corporation)",
+      "name": "Hass Petrol Station",
+      "location": "Kasarani, Nairobi",
+      "coordinates": {
+        "latitude": "-1.222300",
+        "longitude": "36.883000"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 1, Type 2",
+          "charging_speed_kw": "6.6 kW",
+          "availability": "Public"
+        },
+        {
+          "type": "DC",
+          "connector_type": "CCS, CHAdeMO (estimated)",
+          "charging_speed_kw": "30 kW",
+          "availability": "Public"
+        }
+      ]
+    },
+    {
+      "operator": "BasiGo",
+      "name": "Buru Buru Station",
+      "location": "Rabai Road, Buru Buru, Nairobi",
+      "coordinates": {
+        "latitude": "-1.282900",
+        "longitude": "36.862100"
+      },
+      "chargers": [
+        {
+          "type": "DC",
+          "connector_type": "CCS (custom for buses, public access may be limited or require activation)",
+          "charging_speed_kw": "Fast Charge (> 50 kW)",
+          "availability": "Public access (focus on buses)"
+        }
+      ]
+    },
+    {
+      "operator": "BasiGo",
+      "name": "Kikuyu Station",
+      "location": "Kikuyu, Nairobi",
+      "coordinates": {
+        "latitude": "-1.248690",
+        "longitude": "36.671040"
+      },
+      "chargers": [
+        {
+          "type": "DC",
+          "connector_type": "CCS (custom for buses, public access may be limited or require activation)",
+          "charging_speed_kw": "Fast Charge (> 50 kW)",
+          "availability": "Public access (focus on buses)"
+        }
+      ]
+    },
+    {
+      "operator": "Roam",
+      "name": "Roam Hub Lusaka",
+      "location": "Lusaka Road, Nairobi",
+      "coordinates": {
+        "latitude": "-1.299000",
+        "longitude": "36.837800"
+      },
+      "chargers": [
+        {
+          "type": "Swapping Station",
+          "connector_type": "Proprietary (Roam motorcycles)",
+          "charging_speed_kw": "N/A (swapping)",
+          "availability": "Public access (motorcycles)"
+        }
+      ]
+    },
+    {
+      "operator": "Roam",
+      "name": "Roam Hub Kayole",
+      "location": "Kayole Spine Road, Nairobi",
+      "coordinates": {
+        "latitude": "-1.272100",
+        "longitude": "36.906700"
+      },
+      "chargers": [
+        {
+          "type": "Swapping Station",
+          "connector_type": "Proprietary (Roam motorcycles)",
+          "charging_speed_kw": "N/A (swapping)",
+          "availability": "Public access (motorcycles)"
+        }
+      ]
+    },
+    {
+      "operator": "Nopea",
+      "name": "Sarit Centre",
+      "location": "Westlands, Nairobi",
+      "coordinates": {
+        "latitude": "-1.275500",
+        "longitude": "36.798100"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 1, Type 2",
+          "charging_speed_kw": "Level 2 (up to 22 kW)",
+          "availability": "Public"
+        }
+      ]
+    },
+    {
+      "operator": "Nopea",
+      "name": "The Hub Karen",
+      "location": "Karen, Nairobi",
+      "coordinates": {
+        "latitude": "-1.343100",
+        "longitude": "36.702500"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 1, Type 2",
+          "charging_speed_kw": "Level 2 (up to 22 kW)",
+          "availability": "Public"
+        }
+      ]
+    },
+    {
+      "operator": "Ecotrify",
+      "name": "Mpuuga Gardens",
+      "location": "Hurligham, Nairobi",
+      "coordinates": {
+        "latitude": "-1.299100",
+        "longitude": "36.793200"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 2 (estimated)",
+          "charging_speed_kw": "Level 2 (7-22 kW)",
+          "availability": "Public"
+        }
+      ]
+    },
+    {
+      "operator": "Public",
+      "name": "Holy Family Basilica Parking Silo",
+      "location": "CBD, Nairobi",
+      "coordinates": {
+        "latitude": "-1.288288",
+        "longitude": "36.822855"
+      },
+      "chargers": [
+        {
+          "type": "AC",
+          "connector_type": "Type 1, Type 2 (estimated)",
+          "charging_speed_kw": "Level 2 (7-22 kW)",
+          "availability": "Public"
+        }
+      ]
+    }
+  ]
+}
+
