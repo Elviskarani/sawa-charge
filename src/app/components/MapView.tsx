@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
-import { Zap, Filter, X } from 'lucide-react';
+import { Zap, Filter, X, Navigation } from 'lucide-react';
 import evLocationsData from '../../evlocation.json';
 
 interface Charger {
@@ -33,6 +33,8 @@ const MapView: React.FC = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
+  const userCircleRef = useRef<google.maps.Circle | null>(null);
+  const userMarkerRef = useRef<google.maps.Marker | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
@@ -41,6 +43,8 @@ const MapView: React.FC = () => {
     connectorType: '',
     operator: ''
   });
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
 
   const evLocations: EVLocation[] = evLocationsData.ev_charging_locations;
 
@@ -88,6 +92,36 @@ const MapView: React.FC = () => {
     return hasMatchingCharger;
   });
 
+  // Request user location on component mount
+  useEffect(() => {
+    const requestLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userPos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            setUserLocation(userPos);
+          },
+          (error) => {
+            console.error('Location access denied:', error);
+            setLocationError('Location access denied. Showing default location.');
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000
+          }
+        );
+      } else {
+        setLocationError('Geolocation not supported by this browser.');
+      }
+    };
+
+    requestLocation();
+  }, []);
+
   useEffect(() => {
     const initMap = async () => {
       try {
@@ -100,12 +134,12 @@ const MapView: React.FC = () => {
         await loader.load();
 
         if (mapRef.current && !mapInstanceRef.current) {
-          // Kenya coordinates - centered on Nairobi
-          const kenyaCenter = { lat: -1.286389, lng: 36.817223 };
+          // Use user location if available, otherwise default to Nairobi
+          const mapCenter = userLocation || { lat: -1.286389, lng: 36.817223 };
           
           mapInstanceRef.current = new google.maps.Map(mapRef.current, {
-            center: kenyaCenter,
-            zoom: 10,
+            center: mapCenter,
+            zoom: userLocation ? 12 : 10,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             restriction: {
               latLngBounds: {
@@ -135,6 +169,38 @@ const MapView: React.FC = () => {
 
           // Add charging station markers
           addChargingStationMarkers(mapInstanceRef.current);
+          
+          // Add user location marker with circular border if available
+          if (userLocation) {
+            // Add transparent circular border
+            userCircleRef.current = new google.maps.Circle({
+              center: userLocation,
+              radius: 100, // 100 meters radius
+              map: mapInstanceRef.current,
+              fillColor: '#DC2626',
+              fillOpacity: 0.1,
+              strokeColor: '#DC2626',
+              strokeOpacity: 0.3,
+              strokeWeight: 2
+            });
+            
+            // Add user location marker
+            userMarkerRef.current = new google.maps.Marker({
+              position: userLocation,
+              map: mapInstanceRef.current,
+              title: 'Your Location',
+              icon: {
+                url: 'data:image/svg+xml;base64,' + btoa(`
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="50" viewBox="0 0 24 30" fill="none">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#DC2626" stroke="#ffffff" stroke-width="2"/>
+                    <circle cx="12" cy="9" r="3" fill="#ffffff"/>
+                  </svg>
+                `),
+                scaledSize: new google.maps.Size(36, 45),
+                anchor: new google.maps.Point(18, 45)
+              }
+            });
+          }
         }
         
         setIsLoading(false);
@@ -151,6 +217,24 @@ const MapView: React.FC = () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current = null;
       }
+      if (userCircleRef.current) {
+        userCircleRef.current.setMap(null);
+      }
+      if (userMarkerRef.current) {
+        userMarkerRef.current.setMap(null);
+      }
+    };
+  }, [userLocation]);
+
+  // Clean up user location markers
+  useEffect(() => {
+    return () => {
+      if (userCircleRef.current) {
+        userCircleRef.current.setMap(null);
+      }
+      if (userMarkerRef.current) {
+        userMarkerRef.current.setMap(null);
+      }
     };
   }, []);
 
@@ -165,6 +249,18 @@ const MapView: React.FC = () => {
       addChargingStationMarkers(mapInstanceRef.current);
     }
   }, [filters]);
+
+  // Clean up user location markers
+  useEffect(() => {
+    return () => {
+      if (userCircleRef.current) {
+        userCircleRef.current.setMap(null);
+      }
+      if (userMarkerRef.current) {
+        userMarkerRef.current.setMap(null);
+      }
+    };
+  }, []);
 
   const createChargingIcon = () => {
     // Create a custom SVG icon using Lucide Zap icon path
@@ -206,16 +302,26 @@ const MapView: React.FC = () => {
         </div>
       `).join('');
 
+      const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${station.coordinates.latitude},${station.coordinates.longitude}&travelmode=driving`;
+      
       const infoWindow = new google.maps.InfoWindow({
         content: `
           <div style="padding: 12px; max-width: 300px;">
             <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #111827;">${station.name}</h3>
             <p style="margin: 0 0 8px 0; font-size: 14px; color: #6B7280;">${station.location}</p>
             <p style="margin: 0 0 12px 0; font-size: 12px; color: #9CA3AF; font-weight: 500;">Operator: ${station.operator}</p>
-            <div style="border-top: 1px solid #E5E7EB; padding-top: 8px;">
+            <div style="border-top: 1px solid #E5E7EB; padding-top: 8px; margin-bottom: 12px;">
               <div style="font-size: 14px; font-weight: 600; margin-bottom: 6px; color: #374151;">Available Chargers:</div>
               ${chargersInfo}
             </div>
+            <a href="${directionsUrl}" target="_blank" rel="noopener noreferrer" 
+               style="display: inline-block; background-color: #3B82F6; color: white; padding: 8px 16px; 
+                      border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500;
+                      transition: background-color 0.2s;" 
+               onmouseover="this.style.backgroundColor='#2563EB'" 
+               onmouseout="this.style.backgroundColor='#3B82F6'">
+              🧭 Get Directions
+            </a>
           </div>
         `
       });
@@ -243,6 +349,13 @@ const MapView: React.FC = () => {
     });
   };
 
+  const recenterToUserLocation = () => {
+    if (userLocation && mapInstanceRef.current) {
+      mapInstanceRef.current.setCenter(userLocation);
+      mapInstanceRef.current.setZoom(12);
+    }
+  };
+
   const hasActiveFilters = filters.speed || filters.connectorType || filters.operator;
 
   if (error) {
@@ -261,8 +374,14 @@ const MapView: React.FC = () => {
 
   return (
     <div className="w-full h-full relative">
+      {/* Location Status */}
+      {locationError && (
+        <div className="absolute top-4 right-4 z-30 bg-yellow-100 border border-yellow-400 text-yellow-700 px-3 py-2 rounded-lg text-sm max-w-xs">
+          {locationError}
+        </div>
+      )}
       {/* Filter Controls */}
-      <div className="absolute top-4 left-4 z-30">
+      <div className="absolute top-15 left-4 z-30">
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg font-medium transition-colors ${
@@ -371,6 +490,17 @@ const MapView: React.FC = () => {
         className="w-full h-full"
         style={{ minHeight: '400px' }}
       />
+      
+      {/* Recenter Button */}
+      {userLocation && !isLoading && (
+        <button
+          onClick={recenterToUserLocation}
+          className="absolute bottom-20 right-4 z-30 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-colors"
+          title="Center on my location"
+        >
+          <Navigation size={20} />
+        </button>
+      )}
       
       {/* Legend */}
       {!isLoading && (
