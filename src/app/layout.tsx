@@ -116,6 +116,19 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="SawaCharge" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R4P9YM3CG"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-5R4P9YM3CG');
+            `,
+          }}
+        />
         {/* JSON-LD structured data */}
         <script
           type="application/ld+json"
